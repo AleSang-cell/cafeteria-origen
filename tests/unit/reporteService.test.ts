@@ -52,4 +52,36 @@ describe('reporteService', () => {
       });
     });
   });
+  
+  describe('masVendido', () => {
+    it('devuelve null si no hay ventas', () => {
+      expect(reporteService.masVendido()).toBeNull();
+    });
+
+    it('devuelve el producto con más unidades vendidas y su cantidad', () => {
+      pedidoService.crearPedido([
+        { productoId: 1, cantidad: 4 }, // Expreso
+        { productoId: 2, cantidad: 1 }, // Filtrado
+      ]);
+      pedidoService.crearPedido([{ productoId: 3, cantidad: 2 }]); // Expreso
+
+      expect(reporteService.masVendido()).toEqual({
+        productos: ['Expreso'],
+        cantidad: 6,
+      });
+    });
+
+    it('si hay empate devuelve todos los empatados', () => {
+      pedidoService.crearPedido([
+        { productoId: 1, cantidad: 3 }, // Expreso
+        { productoId: 2, cantidad: 3 }, // Filtrado
+        { productoId: 19, cantidad: 1 }, // Muffin de chocolate
+      ]);
+
+      expect(reporteService.masVendido()).toEqual({
+        productos: ['Expreso', 'Filtrado'],
+        cantidad: 3,
+      });
+    });
+  });
 });
