@@ -28,4 +28,28 @@ describe('reporteService', () => {
       expect(reporteService.facturacionTotal()).toBe(21580);
     });
   });
+  
+  describe('cantidadVendidaPorProducto', () => {
+    it('devuelve un objeto vacío si no hay pedidos', () => {
+      expect(reporteService.cantidadVendidaPorProducto()).toEqual({});
+    });
+
+    it('agrupa por nombre de producto sumando las cantidades de todos los pedidos', () => {
+      pedidoService.crearPedido([
+        { productoId: 1, cantidad: 2 }, // Expreso
+        { productoId: 2, cantidad: 1 }, // Filtrado
+      ]);
+      pedidoService.crearPedido([
+        { productoId: 1, cantidad: 3 }, // Expreso (mismo producto, otro pedido)
+        { productoId: 3, cantidad: 5 }, // Expreso (otra variedad, misma máquina)
+        { productoId: 19, cantidad: 1 }, // Muffin de chocolate
+      ]);
+
+      expect(reporteService.cantidadVendidaPorProducto()).toEqual({
+        Expreso: 10,
+        Filtrado: 1,
+        'Muffin de chocolate': 1,
+      });
+    });
+  });
 });
