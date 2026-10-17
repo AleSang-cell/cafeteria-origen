@@ -1,0 +1,54 @@
+@baseUrl = http://localhost:3000
+
+### Listar los 20 productos
+GET {{baseUrl}}/productos
+
+### Consultar un producto
+GET {{baseUrl}}/productos/1
+
+### Crear el primer pedido (total: 17540)
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "items": [
+    { "productoId": 1, "cantidad": 2 },
+    { "productoId": 19, "cantidad": 3 }
+  ]
+}
+
+### Crear otro pedido
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "items": [
+    { "productoId": 2, "cantidad": 1 },
+    { "productoId": 3, "cantidad": 2 }
+  ]
+}
+
+### Demostrar una validación 400
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "items": [
+    { "productoId": 1, "cantidad": 0 }
+  ]
+}
+
+### Listar pedidos
+GET {{baseUrl}}/pedidos
+
+### Consultar el pedido 1
+GET {{baseUrl}}/pedidos/1
+
+### Demostrar un pedido inexistente (404)
+GET {{baseUrl}}/pedidos/999
+
+### Consultar la facturación total
+GET {{baseUrl}}/reportes/facturacion
+
+### Consultar el producto más vendido
+GET {{baseUrl}}/reportes/mas-vendido
