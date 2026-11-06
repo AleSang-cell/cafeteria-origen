@@ -5,10 +5,10 @@ import { app } from '../../src/app';
 // supertest recibe la app de Express directamente: no hace falta levantar
 // el servidor ni ocupar un puerto (por eso app.ts está separado de server.ts).
 
-// Ids del catálogo usados en los tests (ver src/data/catalogo.ts):
-// 9  = Expreso Mediano Colombia   -> 7360
-// 10 = Filtrado Mediano Colombia  -> 5900
-// 19 = Muffin de chocolate        -> 2500
+// Ids del catálogo usados en los tests (ver src/data/catalogo.ts)
+const EXPRESO_MEDIANO_COLOMBIA = 9; // $7.360
+const FILTRADO_MEDIANO_COLOMBIA = 10; // $5.900
+const MUFFIN = 19; // $2.500
 
 describe('GET /productos', () => {
   it('responde 200 con los 20 productos del catálogo', async () => {
@@ -49,11 +49,11 @@ describe('GET /productos', () => {
 
 describe('GET /productos/:id', () => {
   it('responde 200 con un expreso, su tamaño, su variedad con descripción y su precio', async () => {
-    const res = await request(app).get('/productos/9');
+    const res = await request(app).get(`/productos/${EXPRESO_MEDIANO_COLOMBIA}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
-      id: 9,
+      id: EXPRESO_MEDIANO_COLOMBIA,
       tipo: 'expreso',
       nombre: 'Expreso',
       tamanio: 'Mediano',
@@ -66,7 +66,7 @@ describe('GET /productos/:id', () => {
   });
 
   it('distingue un filtrado por su tipo, sin leer el nombre', async () => {
-    const res = await request(app).get('/productos/10');
+    const res = await request(app).get(`/productos/${FILTRADO_MEDIANO_COLOMBIA}`);
 
     expect(res.status).toBe(200);
     expect(res.body.tipo).toBe('filtrado');
@@ -74,11 +74,11 @@ describe('GET /productos/:id', () => {
   });
 
   it('responde 200 con un producto de pastelería y su tipo', async () => {
-    const res = await request(app).get('/productos/19');
+    const res = await request(app).get(`/productos/${MUFFIN}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
-      id: 19,
+      id: MUFFIN,
       tipo: 'pasteleria',
       nombre: 'Muffin de chocolate',
       precio: 2500,
