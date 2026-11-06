@@ -4,29 +4,37 @@ import { Producto } from '../models/producto';
 import { Cafe } from '../models/cafe';
 import { Expreso } from '../models/expreso';
 
+export type TipoProducto = 'expreso' | 'filtrado' | 'pasteleria';
+
+// El front distingue los productos por este campo, sin leer el nombre.
+function tipoDe(producto: Producto): TipoProducto {
+  if (producto instanceof Cafe) {
+    return producto instanceof Expreso ? 'expreso' : 'filtrado';
+  }
+  return 'pasteleria';
+}
+
+// Los datos propios de un café: tamaño y variedad con su descripción.
+function datosDeCafe(cafe: Cafe) {
+  return {
+    tamanio: cafe.tamanio.nombre,
+    variedad: {
+      nombre: cafe.variedad.nombre,
+      descripcion: cafe.variedad.descripcion,
+    },
+  };
+}
+
 // Arma la respuesta JSON de un producto con su precio ya calculado.
-// Los cafés agregan tipo, tamaño y variedad con su descripción;
-// la pastelería solo agrega su tipo.
 export function productoAJson(producto: Producto) {
   const base = {
     id: producto.id,
+    tipo: tipoDe(producto),
     nombre: producto.nombre,
     precio: producto.calcularPrecio(),
   };
 
-  if (producto instanceof Cafe) {
-    return {
-      ...base,
-      tipo: producto instanceof Expreso ? 'expreso' : 'filtrado',
-      tamanio: producto.tamanio.nombre,
-      variedad: {
-        nombre: producto.variedad.nombre,
-        descripcion: producto.variedad.descripcion,
-      },
-    };
-  }
-
-  return { ...base, tipo: 'pasteleria' };
+  return producto instanceof Cafe ? { ...base, ...datosDeCafe(producto) } : base;
 }
 
 export const productosRouter = Router();
