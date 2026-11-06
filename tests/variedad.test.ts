@@ -13,4 +13,21 @@ describe('Variedad', () => {
   it('lanza error con una variedad inválida', () => {
     expect(() => new Variedad('Kenia')).toThrow('Variedad inválida: Kenia');
   });
+
+  it.each(['Brasil', 'Colombia', 'Etiopía'])(
+    '%s tiene una descripción con acidez, cuerpo y notas',
+    (nombre) => {
+      const { descripcion } = new Variedad(nombre);
+
+      expect(descripcion).toMatch(/acidez/i);
+      expect(descripcion).toMatch(/cuerpo/i);
+      expect(descripcion).toMatch(/notas/i);
+    },
+  );
+
+  it('Colombia tiene la descripción del enunciado', () => {
+    expect(new Variedad('Colombia').descripcion).toBe(
+      'Acidez media, cuerpo equilibrado y notas cítricas y florales',
+    );
+  });
 });
