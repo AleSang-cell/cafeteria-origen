@@ -3,6 +3,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 import { pedidosRouter } from './routes/pedidos';
 import { productosRouter } from './routes/productos';
 import { reportesRouter } from './routes/reportes';
+import { testRouter } from './routes/testRoutes';
 
 // app.ts solo arma la aplicación (middlewares y rutas) y la exporta.
 // No llama a listen(): eso lo hace server.ts. Así los tests con supertest
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/productos', productosRouter);
 app.use('/pedidos', pedidosRouter);
 app.use('/reportes', reportesRouter);
+app.use('/__test__', testRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
