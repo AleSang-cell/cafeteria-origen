@@ -18,6 +18,8 @@ npm start
 
 El servidor queda disponible en `http://localhost:3000`. Se puede cambiar el puerto con la variable de entorno `PORT`.
 
+Para los tests E2E, la API se levanta en modo test con `npm run start:test` (ver "Modo test para los E2E").
+
 ## Endpoints
 
 ### Productos
@@ -137,6 +139,19 @@ Todas las respuestas de error tienen el mismo formato, y el front muestra el men
 | 500 | Error inesperado, sin exponer detalles internos | `Error interno del servidor` |
 
 Una mesa o un producto inexistente nunca responde 500. Los errores se procesan en un middleware centralizado (`src/middlewares/errorHandler.ts`).
+
+## Modo test para los E2E
+
+```bash
+npm run start:test
+```
+
+Levanta la API con `NODE_ENV=test` (usa `cross-env`, así funciona igual en Windows, Mac y Linux). Solo en este modo existen dos rutas para que cada E2E arranque con los mismos datos:
+
+- `POST /__test__/reset`: borra todos los pedidos y reinicia los ids. Responde `204`.
+- `POST /__test__/seed`: deja solo el pedido de ejemplo (mesa 4, dos id 9 y un id 19, total 17220). Responde `201`.
+
+Fuera de `NODE_ENV=test`, las dos rutas responden `404`.
 
 ## Pruebas y TDD
 
