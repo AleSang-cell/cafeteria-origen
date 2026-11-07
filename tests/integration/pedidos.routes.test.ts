@@ -25,6 +25,7 @@ describe('API de pedidos', () => {
     expect(respuesta.status).toBe(201);
     expect(respuesta.body).toEqual({
       id: 1,
+      mesaId: null,
       estado: 'pendiente',
       items: pedidoValido.items,
       total: 17540,
@@ -56,12 +57,14 @@ describe('API de pedidos', () => {
     expect(respuesta.body).toEqual([
       {
         id: 1,
+        mesaId: null,
         estado: 'pendiente',
         items: [{ productoId: 1, cantidad: 1 }],
         total: 5020,
       },
       {
         id: 2,
+        mesaId: null,
         estado: 'pendiente',
         items: [{ productoId: 19, cantidad: 2 }],
         total: 5000,
@@ -111,5 +114,55 @@ describe('API de pedidos', () => {
 
     expect(respuesta.status).toBe(404);
     expect(respuesta.body).toHaveProperty('error');
+  });
+
+  describe('mesa del pedido', () => {
+    // Ids del catálogo (ver src/data/catalogo.ts)
+    const EXPRESO_MEDIANO_COLOMBIA = 9; // $7.360
+    const MUFFIN = 19; // $2.500
+
+    // El pedido de ejemplo del enunciado: mesa 4, total 17220
+    const pedidoMesa4 = {
+      mesaId: 4,
+      items: [
+        { productoId: EXPRESO_MEDIANO_COLOMBIA, cantidad: 2 },
+        { productoId: MUFFIN, cantidad: 1 },
+      ],
+    };
+
+    it('POST /pedidos con mesaId lo guarda y lo devuelve', async () => {
+      const respuesta = await request(app).post('/pedidos').send(pedidoMesa4);
+
+      expect(respuesta.status).toBe(201);
+      expect(respuesta.body).toEqual({
+        id: 1,
+        mesaId: 4,
+        estado: 'pendiente',
+        items: pedidoMesa4.items,
+        total: 17220,
+      });
+    });
+
+    it('POST /pedidos sin mesaId queda para retirar en la barra (mesaId null)', async () => {
+      const respuesta = await request(app).post('/pedidos').send({ items: pedidoMesa4.items });
+
+      expect(respuesta.status).toBe(201);
+      expect(respuesta.body.mesaId).toBeNull();
+    });
+
+    it('GET /pedidos/:id devuelve la mesa, el estado, los items y el total', async () => {
+      await request(app).post('/pedidos').send(pedidoMesa4);
+
+      const respuesta = await request(app).get('/pedidos/1');
+
+      expect(respuesta.status).toBe(200);
+      expect(respuesta.body).toEqual({
+        id: 1,
+        mesaId: 4,
+        estado: 'pendiente',
+        items: pedidoMesa4.items,
+        total: 17220,
+      });
+    });
   });
 });
