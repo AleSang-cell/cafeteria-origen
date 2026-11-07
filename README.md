@@ -124,11 +124,19 @@ El conteo de ventas se agrupa por el nombre del producto. Los cafés se agrupan 
 
 ## Manejo de errores
 
-Los errores se procesan en un middleware centralizado:
+Todas las respuestas de error tienen el mismo formato, y el front muestra el mensaje tal cual:
 
-- `400`: datos de entrada o JSON inválidos.
-- `404`: recurso o ruta inexistente.
-- `500`: error inesperado, sin exponer detalles internos.
+```json
+{ "error": "Mesa inexistente: 99" }
+```
+
+| Código | Cuándo | Ejemplo de mensaje |
+|---|---|---|
+| 400 | Items vacíos, producto inexistente, cantidad no entera, mesa fuera de 1 a 12 o JSON mal formado | `Producto inexistente en el catálogo: 999` |
+| 404 | Producto, pedido o ruta inexistente | `Pedido no encontrado: abc` |
+| 500 | Error inesperado, sin exponer detalles internos | `Error interno del servidor` |
+
+Una mesa o un producto inexistente nunca responde 500. Los errores se procesan en un middleware centralizado (`src/middlewares/errorHandler.ts`).
 
 ## Pruebas y TDD
 
