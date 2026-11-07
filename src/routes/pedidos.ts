@@ -41,11 +41,18 @@ function validarItems(body: unknown): ItemPedidoInput[] {
   });
 }
 
-function leerMesa(body: unknown): number | null {
-  if (esObjeto(body) && typeof body.mesaId === 'number') {
-    return body.mesaId;
+function validarMesa(body: unknown): number | null {
+  if (!esObjeto(body) || body.mesaId === undefined || body.mesaId === null) {
+    return null;
   }
-  return null;
+
+  const { mesaId } = body;
+
+  if (typeof mesaId !== 'number' || !Number.isInteger(mesaId) || mesaId < 1 || mesaId > 12) {
+    throw new HttpError(400, `Mesa inexistente: ${String(mesaId)}`);
+  }
+
+  return mesaId;
 }
 
 function pedidoAJson(pedido: Pedido) {
@@ -65,7 +72,9 @@ export const pedidosRouter = Router();
 
 pedidosRouter.post('/', (req, res, next) => {
   try {
-    const pedido = pedidoService.crearPedido(validarItems(req.body), leerMesa(req.body));
+    const items = validarItems(req.body);
+    const mesaId = validarMesa(req.body);
+    const pedido = pedidoService.crearPedido(items, mesaId);
     res.status(201).json(pedidoAJson(pedido));
   } catch (error) {
     next(error);
