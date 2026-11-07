@@ -41,6 +41,18 @@ function validarItems(body: unknown): ItemPedidoInput[] {
   });
 }
 
+const MESA_MINIMA = 1;
+const MESA_MAXIMA = 12;
+
+function esMesaValida(mesaId: unknown): mesaId is number {
+  return (
+    typeof mesaId === 'number' &&
+    Number.isInteger(mesaId) &&
+    mesaId >= MESA_MINIMA &&
+    mesaId <= MESA_MAXIMA
+  );
+}
+
 function validarMesa(body: unknown): number | null {
   if (!esObjeto(body) || body.mesaId === undefined || body.mesaId === null) {
     return null;
@@ -48,7 +60,7 @@ function validarMesa(body: unknown): number | null {
 
   const { mesaId } = body;
 
-  if (typeof mesaId !== 'number' || !Number.isInteger(mesaId) || mesaId < 1 || mesaId > 12) {
+  if (!esMesaValida(mesaId)) {
     throw new HttpError(400, `Mesa inexistente: ${String(mesaId)}`);
   }
 
