@@ -43,4 +43,16 @@ describe('rutas de test', () => {
       total: 17220,
     });
   });
+
+  it.each(['/__test__/reset', '/__test__/seed'])(
+    'fuera de NODE_ENV=test, POST %s responde 404',
+    async (ruta) => {
+      vi.stubEnv('NODE_ENV', 'production');
+
+      const respuesta = await request(app).post(ruta);
+
+      expect(respuesta.status).toBe(404);
+      expect(respuesta.body).toHaveProperty('error');
+    },
+  );
 });
