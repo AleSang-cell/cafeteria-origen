@@ -14,6 +14,20 @@ describe('rutas de test', () => {
     pedidoService.reset();
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('POST /__test__/reset borra los pedidos y responde 204', async () => {
+    await request(app).post('/pedidos').send({ items: [{ productoId: MUFFIN, cantidad: 1 }] });
+
+    const respuesta = await request(app).post('/__test__/reset');
+
+    expect(respuesta.status).toBe(204);
+    const pedidos = await request(app).get('/pedidos');
+    expect(pedidos.body).toEqual([]);
+  });
+
   it('POST /__test__/seed deja solo el pedido de ejemplo: mesa 4, total 17220', async () => {
     await request(app).post('/pedidos').send({ items: [{ productoId: MUFFIN, cantidad: 1 }] });
 
@@ -28,19 +42,5 @@ describe('rutas de test', () => {
       estado: 'pendiente',
       total: 17220,
     });
-  });
-
-  afterEach(() => {
-    vi.unstubAllEnvs();
-  });
-
-  it('POST /__test__/reset borra los pedidos y responde 204', async () => {
-    await request(app).post('/pedidos').send({ items: [{ productoId: MUFFIN, cantidad: 1 }] });
-
-    const respuesta = await request(app).post('/__test__/reset');
-
-    expect(respuesta.status).toBe(204);
-    const pedidos = await request(app).get('/pedidos');
-    expect(pedidos.body).toEqual([]);
   });
 });
