@@ -41,9 +41,17 @@ function validarItems(body: unknown): ItemPedidoInput[] {
   });
 }
 
+function leerMesa(body: unknown): number | null {
+  if (esObjeto(body) && typeof body.mesaId === 'number') {
+    return body.mesaId;
+  }
+  return null;
+}
+
 function pedidoAJson(pedido: Pedido) {
   return {
     id: pedido.id,
+    mesaId: pedido.mesaId,
     estado: pedido.estado,
     items: pedido.items.map(({ producto, cantidad }) => ({
       productoId: producto.id,
@@ -57,7 +65,7 @@ export const pedidosRouter = Router();
 
 pedidosRouter.post('/', (req, res, next) => {
   try {
-    const pedido = pedidoService.crearPedido(validarItems(req.body));
+    const pedido = pedidoService.crearPedido(validarItems(req.body), leerMesa(req.body));
     res.status(201).json(pedidoAJson(pedido));
   } catch (error) {
     next(error);
