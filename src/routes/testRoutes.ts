@@ -8,3 +8,15 @@ testRouter.post('/reset', (_req, res) => {
   pedidoService.reset();
   res.status(204).end();
 });
+
+testRouter.post('/seed', (_req, res) => {
+  pedidoService.reset();
+  pedidoService.crearPedido(
+    [
+      { productoId: 9, cantidad: 2 },
+      { productoId: 19, cantidad: 1 },
+    ],
+    4,
+  );
+  res.status(201).end();
+});
