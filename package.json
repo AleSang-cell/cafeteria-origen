@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx src/server.ts",
-    "start:test": "cross-env NODE_ENV=test tsx src/server.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc"
@@ -16,7 +15,6 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/supertest": "^7.2.1",
-    "cross-env": "^10.1.0",
     "supertest": "^7.3.1",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",

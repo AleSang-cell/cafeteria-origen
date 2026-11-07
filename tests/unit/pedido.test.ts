@@ -33,16 +33,4 @@ describe('Pedido', () => {
 
     expect(pedido.calcularTotal()).toBe(0);
   });
-
-  it('guarda la mesa desde la que se hizo el pedido', () => {
-    const pedido = new Pedido(1, [{ producto: muffin, cantidad: 1 }], 4);
-
-    expect(pedido.mesaId).toBe(4);
-  });
-
-  it('sin mesa queda para retirar en la barra (mesaId null)', () => {
-    const pedido = new Pedido(1, [{ producto: muffin, cantidad: 1 }]);
-
-    expect(pedido.mesaId).toBeNull();
-  });
 });

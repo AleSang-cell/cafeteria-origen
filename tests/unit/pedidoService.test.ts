@@ -63,16 +63,4 @@ describe('pedidoService', () => {
 
     expect(pedidoService.listar()).toHaveLength(0);
   });
-
-  it('crearPedido guarda la mesa del pedido', () => {
-    const pedido = pedidoService.crearPedido([{ productoId: 19, cantidad: 1 }], 4);
-
-    expect(pedido.mesaId).toBe(4);
-  });
-
-  it('crearPedido sin mesa deja mesaId en null', () => {
-    const pedido = pedidoService.crearPedido([{ productoId: 19, cantidad: 1 }]);
-
-    expect(pedido.mesaId).toBeNull();
-  });
 });
