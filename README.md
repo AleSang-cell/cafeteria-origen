@@ -82,18 +82,38 @@ Los ids difieren del ejemplo del enunciado (ahí el Expreso Mediano Colombia es 
 - `GET /pedidos`: lista todos los pedidos.
 - `GET /pedidos/:id`: devuelve un pedido o responde `404`.
 
-Ejemplo de creación:
+Cuerpo de `POST /pedidos` para la mesa 4, con dos Expreso Mediano Colombia y un Muffin:
 
 ```json
 {
+  "mesaId": 4,
   "items": [
-    { "productoId": 1, "cantidad": 2 },
-    { "productoId": 19, "cantidad": 3 }
+    { "productoId": 9, "cantidad": 2 },
+    { "productoId": 19, "cantidad": 1 }
   ]
 }
 ```
 
-Cada pedido se devuelve con su `id`, `estado`, `items` y `total` calculado. Los items deben tener un `productoId` existente y una `cantidad` entera positiva; de lo contrario la API responde `400`.
+Respuesta `201` (la misma forma devuelven `GET /pedidos` y `GET /pedidos/:id`):
+
+```json
+{
+  "id": 1,
+  "mesaId": 4,
+  "estado": "pendiente",
+  "items": [
+    { "productoId": 9, "cantidad": 2 },
+    { "productoId": 19, "cantidad": 1 }
+  ],
+  "total": 17220
+}
+```
+
+Reglas:
+
+- `mesaId` es opcional. Las mesas válidas van de 1 a 12. Sin `mesaId`, o con `null`, el pedido es para retirar en la barra y se devuelve `"mesaId": null`.
+- Cada item necesita un `productoId` existente y una `cantidad` entera positiva.
+- El `total` lo calcula la API a partir de los precios del catálogo; el front no lo recalcula.
 
 ### Reportes
 
