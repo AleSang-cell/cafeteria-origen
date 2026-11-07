@@ -14,6 +14,22 @@ describe('rutas de test', () => {
     pedidoService.reset();
   });
 
+  it('POST /__test__/seed deja solo el pedido de ejemplo: mesa 4, total 17220', async () => {
+    await request(app).post('/pedidos').send({ items: [{ productoId: MUFFIN, cantidad: 1 }] });
+
+    const respuesta = await request(app).post('/__test__/seed');
+
+    expect(respuesta.status).toBe(201);
+    const pedidos = await request(app).get('/pedidos');
+    expect(pedidos.body).toHaveLength(1);
+    expect(pedidos.body[0]).toMatchObject({
+      id: 1,
+      mesaId: 4,
+      estado: 'pendiente',
+      total: 17220,
+    });
+  });
+
   afterEach(() => {
     vi.unstubAllEnvs();
   });
