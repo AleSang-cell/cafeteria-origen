@@ -164,5 +164,40 @@ describe('API de pedidos', () => {
         total: 17220,
       });
     });
+    
+    it.each([
+      ['inexistente', 99],
+      ['fuera de rango', 13],
+      ['cero', 0],
+      ['negativa', -1],
+      ['con decimales', 2.5],
+      ['que no es un número', 'abc'],
+    ])('POST /pedidos responde 400 con una mesa %s', async (_caso, mesaId) => {
+      const respuesta = await request(app).post('/pedidos').send({ ...pedidoMesa4, mesaId });
+
+      expect(respuesta.status).toBe(400);
+      expect(respuesta.body).toHaveProperty('error');
+      expect(pedidoService.listar()).toHaveLength(0);
+    });
+
+    it('el error indica qué mesa no existe', async () => {
+      const respuesta = await request(app).post('/pedidos').send({ ...pedidoMesa4, mesaId: 99 });
+
+      expect(respuesta.body).toEqual({ error: 'Mesa inexistente: 99' });
+    });
+
+    it.each([1, 12])('acepta la mesa %i, límite del rango', async (mesaId) => {
+      const respuesta = await request(app).post('/pedidos').send({ ...pedidoMesa4, mesaId });
+
+      expect(respuesta.status).toBe(201);
+      expect(respuesta.body.mesaId).toBe(mesaId);
+    });
+
+    it('POST /pedidos con mesaId null queda para retirar en la barra', async () => {
+      const respuesta = await request(app).post('/pedidos').send({ ...pedidoMesa4, mesaId: null });
+
+      expect(respuesta.status).toBe(201);
+      expect(respuesta.body.mesaId).toBeNull();
+    });
   });
 });
