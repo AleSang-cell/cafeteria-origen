@@ -11,7 +11,6 @@ export class Pedido {
   constructor(
     public readonly id: number,
     public readonly items: ItemPedido[],
-    public readonly mesaId: number | null = null,
   ) {}
 
   calcularTotal(): number {

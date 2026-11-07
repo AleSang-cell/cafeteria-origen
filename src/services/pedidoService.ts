@@ -1,7 +1,7 @@
 import { Pedido, ItemPedido } from '../models/Pedido';
 import { catalogo } from '../data/catalogo';
 
-export interface ItemPedidoInput {
+interface ItemPedidoInput {
   productoId: number;
   cantidad: number;
 }
@@ -10,7 +10,7 @@ class PedidoService {
   private pedidos: Pedido[] = [];
   private siguienteId = 1;
 
-    crearPedido(items: ItemPedidoInput[], mesaId: number | null = null): Pedido {
+  crearPedido(items: ItemPedidoInput[]): Pedido {
     if (items.length === 0) {
       throw new Error('El pedido debe tener al menos un item');
     }
@@ -28,7 +28,7 @@ class PedidoService {
       return { producto, cantidad };
     });
 
-    const pedido = new Pedido(this.siguienteId++, itemsResueltos, mesaId);
+    const pedido = new Pedido(this.siguienteId++, itemsResueltos);
     this.pedidos.push(pedido);
     return pedido;
   }
