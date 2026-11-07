@@ -159,7 +159,7 @@ Los tests unitarios prueban los modelos y servicios de forma aislada. Los tests 
 
 `pedidoService.reset()` se ejecuta en cada `beforeEach` de las pruebas que almacenan pedidos para evitar contaminación entre casos y reiniciar los ids.
 
-El historial conserva el ciclo TDD de esta etapa: primero el commit con los tests fallando y después el commit con el código mínimo que deja toda la suite en verde.
+El historial conserva el ciclo TDD completo: un commit `test:` con el test en rojo, un commit `feat:` con el código mínimo que lo pone en verde y, cuando hace falta, un commit `refactor:` que mejora el código sin cambiar el comportamiento (la suite sigue pasando igual). Los tests de `tests/integration/errores.test.ts` son de caracterización: documentan el formato de errores que la API ya cumplía, por eso no tienen un commit en rojo.
 
 ## Demo
 
