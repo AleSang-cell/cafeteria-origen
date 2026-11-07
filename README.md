@@ -23,9 +23,58 @@ El servidor queda disponible en `http://localhost:3000`. Se puede cambiar el pue
 ### Productos
 
 - `GET /productos`: lista los 20 productos del catálogo.
-- `GET /productos/:id`: devuelve un producto o responde `404`.
+- `GET /productos/:id`: devuelve un producto o responde `404` con `{ "error": "..." }`.
 
-Los productos usan ids numéricos del 1 al 20.
+Cada producto trae su `precio` final, ya calculado por la API, y un `tipo` (`expreso`, `filtrado` o `pasteleria`) para distinguirlos sin leer el nombre. Los cafés agregan `tamanio` y `variedad` con su descripción.
+
+Café:
+
+```json
+{
+  "id": 9,
+  "tipo": "expreso",
+  "nombre": "Expreso",
+  "precio": 7360,
+  "tamanio": "Mediano",
+  "variedad": {
+    "nombre": "Colombia",
+    "descripcion": "Acidez media, cuerpo equilibrado y notas cítricas y florales"
+  }
+}
+```
+
+Pastelería:
+
+```json
+{ "id": 19, "tipo": "pasteleria", "nombre": "Muffin de chocolate", "precio": 2500 }
+```
+
+Ids del catálogo:
+
+| id | Tipo | Tamaño | Variedad | Precio |
+|---|---|---|---|---|
+| 1 | expreso | Pocillo | Brasil | 5020 |
+| 2 | filtrado | Pocillo | Brasil | 4040 |
+| 3 | expreso | Pocillo | Colombia | 5740 |
+| 4 | filtrado | Pocillo | Colombia | 4280 |
+| 5 | expreso | Pocillo | Etiopía | 6820 |
+| 6 | filtrado | Pocillo | Etiopía | 4640 |
+| 7 | expreso | Mediano | Brasil | 6280 |
+| 8 | filtrado | Mediano | Brasil | 5300 |
+| 9 | expreso | Mediano | Colombia | 7360 |
+| 10 | filtrado | Mediano | Colombia | 5900 |
+| 11 | expreso | Mediano | Etiopía | 8980 |
+| 12 | filtrado | Mediano | Etiopía | 6800 |
+| 13 | expreso | Taza grande | Brasil | 7540 |
+| 14 | filtrado | Taza grande | Brasil | 6700 |
+| 15 | expreso | Taza grande | Colombia | 8980 |
+| 16 | filtrado | Taza grande | Colombia | 7700 |
+| 17 | expreso | Taza grande | Etiopía | 11140 |
+| 18 | filtrado | Taza grande | Etiopía | 9200 |
+| 19 | pasteleria | | Muffin de chocolate | 2500 |
+| 20 | pasteleria | | Torta selva negra | 4200 |
+
+Los ids difieren del ejemplo del enunciado (ahí el Expreso Mediano Colombia es el 5); los precios coinciden. El front busca cada café por `tipo`, `tamanio` y `variedad.nombre`, nunca por id.
 
 ### Pedidos
 
