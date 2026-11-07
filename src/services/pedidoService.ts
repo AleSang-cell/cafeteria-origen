@@ -1,7 +1,7 @@
 import { Pedido, ItemPedido } from '../models/Pedido';
 import { catalogo } from '../data/catalogo';
 
-interface ItemPedidoInput {
+export interface ItemPedidoInput {
   productoId: number;
   cantidad: number;
 }
